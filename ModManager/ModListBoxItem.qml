@@ -31,7 +31,7 @@ Item {
                 text: styleData.value || ""
                 color: styleData.textColor
                 opacity: 1
-                font.family: pal.fixedFont
+                font.family: pal.normalFont
                 font.pixelSize: pal.fontSize
                 renderType: pal.renderType
                 textFormat: Text.PlainText
@@ -45,7 +45,7 @@ Item {
                 text: item.version || ""
                 color: styleData.textColor
                 opacity: 1
-                font.family: pal.fixedFont
+                font.family: pal.normalFont
                 font.pixelSize: pal.fontSize
                 renderType: pal.renderType
                 textFormat: Text.PlainText
@@ -66,7 +66,7 @@ Item {
                 text: item.description || "(no description)"
                 color: styleData.textColor
                 opacity: 1
-                font.family: pal.fixedFont
+                font.family: pal.normalFont
                 font.pixelSize: pal.fontSize * 0.8
                 renderType: pal.renderType
                 textFormat: Text.PlainText
@@ -80,7 +80,7 @@ Item {
                 objectName: "status"
                 text: item.loaded ? "✓ON" : "✖OFF"
                 color: styleData.selected ? styleData.textColor : (item.loaded ? "#22B14C" : "#FF0000")
-                font.family: pal.fixedFont
+                font.family: pal.normalFont
                 font.pixelSize: pal.fontSize * 0.8
                 renderType: pal.renderType
                 textFormat: Text.PlainText
@@ -93,7 +93,7 @@ Item {
                 objectName: "newStatusArrow"
                 text: (item.enabled != item.loaded) ? " -> " : ""
                 color: styleData.textColor
-                font.family: pal.fixedFont
+                font.family: pal.normalFont
                 font.pixelSize: pal.fontSize * 0.8
                 renderType: pal.renderType
                 textFormat: Text.PlainText
@@ -106,7 +106,7 @@ Item {
                 objectName: "newStatus"
                 text: (item.enabled != item.loaded) ? (item.enabled ? "✓ON" : "✖OFF") : ""
                 color: styleData.selected ? styleData.textColor : (item.enabled ? "#22B14C" : "#FF0000")
-                font.family: pal.fixedFont
+                font.family: pal.normalFont
                 font.pixelSize: pal.fontSize * 0.8
                 renderType: pal.renderType
                 textFormat: Text.PlainText

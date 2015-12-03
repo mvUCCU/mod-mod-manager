@@ -37,7 +37,7 @@ ListBox {
     ListBoxColumn {
         title: qsTr("Value")
         role: "value"
-        width: 242
+        width: 350
     }
 
     model: ListModel {
