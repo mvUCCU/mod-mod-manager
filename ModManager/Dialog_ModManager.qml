@@ -41,7 +41,6 @@ ModalWindow {
         }
 
         Palette { id: pal }
-        DialogBoxHelper { id: helper }
 
         function buildModSettingsUrl(name) {
             return settingsPath + encodeURIComponent(name) + ".json";
@@ -114,20 +113,23 @@ ModalWindow {
             var mod = modsData.mods[i];
             if (mod.settings.enabled == status) return;
 
-            var dependencies = [];
-            if (status)
-                dependencies = findDependency(mod);
-            else
-                dependencies = findDependent(mod);
+            var updateStatus = function(mod) {
+                var dependencies = [];
+                if (status)
+                    dependencies = findDependency(mod);
+                else
+                    dependencies = findDependent(mod);
 
-            if (dependencies.length > 0) {
-                for (var i = 0; i < dependencies.length; i++) {
-                    dependencies[i].settings.enabled = status;
+                if (dependencies.length > 0) {
+                    for (var i = 0; i < dependencies.length; i++) {
+                        updateStatus(dependencies[i]);
+                    }
                 }
+                mod.settings.enabled = status;
             }
-            mod.settings.enabled = status;
-            helper.setModified();
+            updateStatus(mod);
             modList.refresh();
+            applyEnabled = true;
         }
 
         function loadModsData() {
