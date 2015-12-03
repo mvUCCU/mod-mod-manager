@@ -14,6 +14,7 @@ var readLocalFile = function(name) {
   "ModManager/ModListBoxItem.qml",
   "ModManager/Tab_ModFileReader.qml",
   "ModManager/Tab_ModInfo.qml",
+  "ModManager/Tab_ModSettings.qml",
 ].forEach(function(i) {
   if (path.extname(i) == ".js" && path.extname(path.basename(i, ".js")) == ".qml") {
     require("./" + i)

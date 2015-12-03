@@ -27,8 +27,6 @@ ModalWindow {
 
             modList.setData(modsData.mods);
             modList.currentIndex = 0;
-
-            applyEnabled = true;
         }
 
         onOk: {
@@ -37,11 +35,11 @@ ModalWindow {
 
         onApply: {
             saveModSettings();
-            applyEnabled = true;
+            applyEnabled = false;
         }
 
         Palette { id: pal }
-        DialogBoxHelper { id: helper } // helper.setModified();
+        DialogBoxHelper { id: helper }
 
         function buildModSettingsUrl(name) {
             return settingsPath + encodeURIComponent(name) + ".json";
@@ -126,6 +124,7 @@ ModalWindow {
                 }
             }
             mod.settings.enabled = status;
+            helper.setModified();
             modList.refresh();
         }
 
@@ -276,6 +275,14 @@ ModalWindow {
                         Tab_ModFileReader {
                             mod: dialogBox.currentMod
                             tryFileList: ["LICENSE.md", "LICENSE.markdown", "LICENSE.txt", "LICENSE"]
+                        }
+                    }
+                    Tab {
+                        title: "Settings"
+                        id: settingsTab
+
+                        Tab_ModSettings {
+                            mod: dialogBox.currentMod
                         }
                     }
                 }

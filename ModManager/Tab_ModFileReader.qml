@@ -13,7 +13,7 @@ TextArea {
     selectAllOnFocus: false
     anchors.fill: parent
     anchors.margins: 8
-    font.pixelSize: pal.labelFontSize * 0.9
+    font.pixelSize: pal.fontSize
     font.family: pal.fixedFont
 
     property var mod: null
