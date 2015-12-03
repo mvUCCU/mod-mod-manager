@@ -17,6 +17,8 @@ ListBox {
     property var manager : null
     property var parameters: ({})
 
+    signal modified()
+
     Component.onCompleted: loadScript()
     onModChanged: loadScript()
 
@@ -149,6 +151,7 @@ ListBox {
             item.value = value;
             mod.settings.settings[item.name] = item.value;
             helper.setModified();
+            modified();
         }
     }
 }

@@ -81,3 +81,22 @@ var addMainAction = function() {
 
 addMainMenu()
 addMainAction()
+
+var data = {
+  settingsPanel: {}
+}
+var dumped = false
+var ModManager = {}
+var dumpData = function() {
+  (dumped ? ModAPI.update : ModAPI.add).apply(ModAPI, ["ModManager/data.json", JSON.stringify(data)])
+}
+
+ModManager.registerSettingPanel = function(name, describe) {
+  var modName = ModAPI.currentModName()
+  data.settingsPanel[modName] = data.settingsPanel[modName] || []
+  data.settingsPanel[modName].push({name: name, describe: describe})
+  dumpData()
+}
+
+dumpData()
+module.exports = ModManager

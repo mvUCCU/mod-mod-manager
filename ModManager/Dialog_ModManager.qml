@@ -20,10 +20,12 @@ ModalWindow {
         applyVisible: true
 
         property var modsData: null
+        property var managerData: null
         property var settingsPath: null
 
         onInit: {
             loadModsData();
+            loadManagerData();
 
             modList.setData(modsData.mods);
             modList.currentIndex = 0;
@@ -143,9 +145,64 @@ ModalWindow {
         }
 
         property var currentMod: modsData ? modsData.mods[modList.currentIndex] : null
+        property var currentModFixed: null
 
         function switchToMod(index) {
             var mod = modsData.mods[index];
+            for (var i = 4; i < tabView.count; i++) {
+                tabView.removeTab(i);
+            }
+
+            currentModFixed = mod;
+
+            var tabs = managerData.settingsPanel[mod.name] || [];
+            onTabViewLoadedConnections.model = tabs.length;
+            for (var i = 0; i < tabs.length; i ++) {
+                var tab = tabs[i];
+                var loader = Qt.createComponent("Settings/" + mod.name + "/" + tab.describe + ".qml");
+                onTabViewLoadedConnections.itemAt(i).conn.target = tabView.addTab(tab.name, loader);
+            }
+        }
+
+        function refreshUserSettingPanels() {
+          for (var i = 4; i < tabView.count; i++) {
+              var tab = tabView.getTab(i);
+              if (!tab) continue;
+
+              var item = tab.item;
+              if (!item) continue;
+              if (!item.refresh) continue;
+
+              item.refresh();
+          }
+        }
+
+        Repeater {
+            id: onTabViewLoadedConnections
+            model: 0
+            Item {
+                property var conn: Connections {
+                    target: null
+                    onLoaded: {
+                        target.item.mod = currentModFixed;
+                    }
+                }
+            }
+        }
+
+        function loadManagerData() {
+            var path = ":/qml/ModManager/data.json";
+            try {
+                var json = TkoolAPI.readResource(path);
+                if (json) {
+                    return managerData = JSON.parse(json);
+                } else {
+                    return managerData = null;
+                }
+            } catch (e) {
+                console.warn(e);
+                return managerData = null;
+            }
         }
 
         function loadRawModsData() {
@@ -283,6 +340,9 @@ ModalWindow {
 
                         Tab_ModSettings {
                             mod: dialogBox.currentMod
+                            onModified: {
+                                dialogBox.refreshUserSettingPanels();
+                            }
                         }
                     }
                 }
