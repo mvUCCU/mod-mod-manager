@@ -143,19 +143,25 @@ ModalWindow {
             }
         }
 
+        property var currentMod: modsData ? modsData.mods[modList.currentIndex] : null
+
+        function switchToMod(index) {
+            var mod = modsData.mods[index];
+        }
+
         function loadRawModsData() {
-          var path = ":/qml/ModManager/mods.json";
-          try {
-              var json = TkoolAPI.readResource(path);
-              if (json) {
-                  return JSON.parse(json);
-              } else {
-                  return null;
-              }
-          } catch (e) {
-              console.warn(e);
-              return null;
-          }
+            var path = ":/qml/ModManager/mods.json";
+            try {
+                var json = TkoolAPI.readResource(path);
+                if (json) {
+                    return JSON.parse(json);
+                } else {
+                    return null;
+                }
+            } catch (e) {
+                console.warn(e);
+                return null;
+            }
         }
 
         DialogBoxColumn {
@@ -163,7 +169,7 @@ ModalWindow {
                 ListBox {
                     id: modList
                     width: 200
-                    height: 360
+                    height: tabView.height
 
                     itemHeight: 48
 
@@ -237,15 +243,41 @@ ModalWindow {
                         }
                     }
 
-                    onCurrentIndexChanged: { ; }
+                    onCurrentIndexChanged: {
+                        dialogBox.switchToMod(currentIndex);
+                    }
                 }
-                TextArea {
-                    id: textArea
-                    readOnly: true
-                    selectAllOnFocus: false
-                    width: 560
-                    height: 360
-                    font.pixelSize: pal.labelFontSize * 0.9
+                TabView {
+                    id: tabView
+                    width: 600
+                    height: 400
+                    Tab {
+                        title: "Info"
+                        id: infoTab
+
+                        Tab_ModInfo {
+                            mod: dialogBox.currentMod
+                            manager: dialogBox
+                        }
+                    }
+                    Tab {
+                        title: "Help"
+                        id: helpTab
+
+                        Tab_ModFileReader {
+                            mod: dialogBox.currentMod
+                            tryFileList: ["README.md", "README.markdown", "README.txt", "README"]
+                        }
+                    }
+                    Tab {
+                        title: "License"
+                        id: licenseTab
+
+                        Tab_ModFileReader {
+                            mod: dialogBox.currentMod
+                            tryFileList: ["LICENSE.md", "LICENSE.markdown", "LICENSE.txt", "LICENSE"]
+                        }
+                    }
                 }
             }
         }
