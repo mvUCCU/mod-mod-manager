@@ -102,6 +102,7 @@ ModalWindow {
                     width: 560
                     height: 360
                     font.pixelSize: pal.labelFontSize * 0.9
+                    font.family: pal.fixedFont
                 }
             }
         }
