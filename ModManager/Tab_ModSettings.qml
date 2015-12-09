@@ -64,60 +64,19 @@ ListBox {
 
         var url = TkoolAPI.pathToUrl(mod.location) + "/settings.js";
         var script = TkoolAPI.readFile(url);
-        var re = /\/\*\:([a-zA-Z_]*)([\s\S]*?)\*\//mg;
-        var locale = TkoolAPI.locale();
-        var englishComments = "";
-        var localComments = "";
+        var data = PluginParser.parse(script);
+
         paramNames = [];
         paramDescs = {};
         paramDefaults = {};
-        for (;;) {
-            var match = re.exec(script);
-            if (match) {
-                var lang = match[1];
-                if (!lang || lang === "en") {
-                    englishComments = match[2];
-                } else if (lang.length >= 2 && locale.indexOf(lang) === 0) {
-                    localComments = match[2];
-                }
-            } else {
-                break;
-            }
-        }
-        if (localComments) {
-            processCommentBlock(localComments);
-        } else {
-            processCommentBlock(englishComments);
+        if (!data.parameters) data.parameters = [];
+        for (var i = 0; i < data.parameters.length; i++) {
+            var param = data.parameters[i];
+            paramNames.push(param.name);
+            paramDescs[param.name] = param.description;
+            paramDefaults[param.name] = param.defaultValue;
         }
         buildParameterListModel();
-    }
-
-    function processCommentBlock(comments) {
-        var currentParam = null;
-        var re = /@(\w+)([^@]*)/g;
-        for (;;) {
-            var match = re.exec(comments);
-            if (!match) {
-                break;
-            }
-            var keyword = match[1];
-            var text = match[2];
-            text = text.replace(/[ ]*\n[ ]*\*?[ ]?/g, "\n");
-            text = text.trim();
-            var text2 = text.split("\n")[0];
-            switch (keyword) {
-            case 'param':
-                paramNames.push(text2);
-                currentParam = text2;
-                break;
-            case 'desc':
-                paramDescs[currentParam] = text;
-                break;
-            case 'default':
-                paramDefaults[currentParam] = text2;
-                break;
-            }
-        }
     }
 
     function buildParameterListModel() {
