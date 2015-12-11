@@ -6,6 +6,7 @@ import "../BasicLayouts"
 import "../Controls"
 import "../ObjControls"
 import "../Singletons"
+import "../Singletons/plugin-parser"
 import "../Main"
 
 ListBox {
